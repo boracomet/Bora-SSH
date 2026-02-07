@@ -24,6 +24,8 @@ __________                                _________ _________ ___ ___
 
 ## 📸 Ana Menü Görünümü
 
+![Ana Menü](assets/main-menu.png)
+
 ```
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
@@ -37,15 +39,9 @@ __________                                _________ _________ ___ ___
 ║  │    Sunucu Sil                                       │    ║
 ║  │    Sunucu Listesi                                   │    ║
 ║  │    Çıkış                                            │    ║
-║  │                                                      │    ║
-║  ├────────────────────────────────────────────────────┤    ║
-║  │  Açık Sekmeler:                                     │    ║
-║  │    [1] SSH: Production Server                      │    ║
-║  │    [2] SSH: Development Server                    │    ║
-║  │    [3] SSH: Staging Server                         │    ║
 ║  └────────────────────────────────────────────────────┘    ║
 ║                                                              ║
-║  [↑↓] Seç | [Enter] Onayla | [1-9] Sekme Öne Getir | [q] Çıkış
+║  [↑↓] Seç | [Enter] Onayla | [q] Çıkış
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
@@ -61,7 +57,6 @@ __________                                _________ _________ ___ ___
 ### ⌨️ **Kolay Navigasyon**
 - **Yön tuşları** (↑↓) ile menü gezintisi
 - **Enter** ile seçim onaylama
-- **Rakam tuşları** (1-9) ile açık sekmeleri hızlıca öne getirme
 - **q** veya **Esc** ile çıkış
 
 ### 💾 **Sunucu Yönetimi**
@@ -73,7 +68,6 @@ __________                                _________ _________ ___ ___
 ### 🪟 **Terminal Yönetimi**
 - ✅ Yeni SSH bağlantıları otomatik olarak yeni Terminal penceresinde açılır
 - ✅ Ana script penceresi açık kalır
-- ✅ Açık sekmeleri görüntüleme ve hızlı erişim
 - ✅ Sekme başlıklarında sunucu bilgileri
 
 ### 🔐 **Güvenlik**
@@ -120,7 +114,6 @@ Script çalıştırıldığında renkli ASCII art başlık ve ana menü görünt
 |-----|-------|
 | `↑` `↓` | Menü öğeleri arasında gezin |
 | `Enter` | Seçili öğeyi onayla |
-| `1-9` | Açık sekmeleri öne getir |
 | `q` | Çıkış yap |
 
 ### Sunucu Ekleme
@@ -143,21 +136,6 @@ Sunucu bilgileri `~/.bora-ssh/servers.conf` dosyasına kaydedilir.
 2. Kayıtlı sunucular listesinden bir sunucu seçin
 3. SSH bağlantısı yeni bir Terminal penceresinde açılır
 4. Ana script penceresi açık kalır, yeni bağlantılar ekleyebilirsiniz
-
-### Sekme Yönetimi
-
-Ana menüde açık Terminal sekmeleri otomatik olarak listelenir:
-
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Açık Sekmeler:
-  [1] SSH: Production Server
-  [2] SSH: Development Server
-  [3] SSH: Staging Server
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
-Rakam tuşlarına (`1-9`) basarak ilgili sekmeyi hızlıca öne getirebilirsiniz.
 
 ---
 
@@ -219,16 +197,6 @@ $ ./bora-ssh.sh
 # 3. Ana menüye dön
 # 4. Development Server'a bağlan
 # 5. Yeni Terminal penceresi açılır
-# 6. Ana menüde [1] ve [2] tuşlarıyla sekmeler arasında geçiş yap
-```
-
-### Senaryo 3: Hızlı Sekme Geçişi
-
-```bash
-# Ana menüdeyken:
-# [1] tuşu → İlk sekme öne gelir
-# [2] tuşu → İkinci sekme öne gelir
-# [3] tuşu → Üçüncü sekme öne gelir
 ```
 
 ---
