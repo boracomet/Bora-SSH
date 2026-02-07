@@ -1,0 +1,26 @@
+# Bora-SSH Configuration Files
+# Sunucu bilgileri hassas bilgiler içerdiği için git'e yüklenmemeli
+
+# Konfigürasyon dizini ve dosyaları
+.bora-ssh/
+*.conf
+
+# macOS sistem dosyaları
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Dosya uzantıları
+*.swp
+*.swo
+*~
+
+# Log dosyaları
+*.log
+
+# Geçici dosyalar
+*.tmp
+*.temp
