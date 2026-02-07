@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # bora-ssh - SSH Connection Manager
-# macOS için interaktif SSH yönetim aracı
+# Interactive SSH management tool for macOS
 
-# Renkler (soft turuncu tonları)
+# Colors (soft orange tones)
 ORANGE='\033[38;5;208m'
 LIGHT_ORANGE='\033[38;5;215m'
 YELLOW='\033[38;5;220m'
@@ -13,11 +13,11 @@ BLUE='\033[38;5;75m'
 RED='\033[38;5;196m'
 WHITE='\033[1;37m'
 
-# Konfigürasyon dosyası
+# Configuration file
 CONFIG_DIR="$HOME/.bora-ssh"
 CONFIG_FILE="$CONFIG_DIR/servers.conf"
 
-# ASCII Art Başlık
+# ASCII Art Banner
 show_banner() {
     clear
     echo -e "${ORANGE}"
@@ -30,11 +30,11 @@ __________                                _________ _________ ___ ___
         \/                  \/                  \/        \/       \/  
 EOF
     echo -e "${RESET}"
-    echo -e "${LIGHT_ORANGE}        SSH Connection Manager${RESET}"
+    echo -e "${LIGHT_ORANGE}SSH Connection Manager${RESET}"
     echo ""
 }
 
-# Konfigürasyon dizinini oluştur
+# Initialize configuration directory
 init_config() {
     if [ ! -d "$CONFIG_DIR" ]; then
         mkdir -p "$CONFIG_DIR"
@@ -44,10 +44,10 @@ init_config() {
     fi
 }
 
-# Sunucu listesini yükle
+# Load server list
 load_servers() {
     if [ -f "$CONFIG_FILE" ] && [ -s "$CONFIG_FILE" ]; then
-        # Boş satırları filtrele ve array olarak döndür
+        # Filter empty lines and return as array
         while IFS= read -r line || [ -n "$line" ]; do
             if [ -n "$line" ]; then
                 echo "$line"
@@ -56,7 +56,7 @@ load_servers() {
     fi
 }
 
-# Sunucu kaydet
+# Save server
 save_server() {
     local name=$1
     local host=$2
@@ -66,23 +66,23 @@ save_server() {
     echo "$name|$host|$user|$port" >> "$CONFIG_FILE"
 }
 
-# Sunucu bilgilerini parse et
+# Parse server information
 parse_server() {
     local line=$1
     IFS='|' read -r name host user port <<< "$line"
     echo "$name|$host|$user|$port"
 }
 
-# Yön tuşları için okuma fonksiyonu (macOS uyumlu)
+# Read key function for arrow keys (macOS compatible)
 read_key() {
     local key
     local keypress
     
-    # macOS için özel karakter okuma
+    # Special character reading for macOS
     IFS= read -rs -n1 -t 0.1 keypress 2>/dev/null || keypress=$(dd bs=1 count=1 2>/dev/null)
     
     if [ "$keypress" = $'\x1b' ]; then
-        # Escape sequence başladı
+        # Escape sequence started
         IFS= read -rs -n2 -t 0.1 keypress 2>/dev/null || keypress=$(dd bs=1 count=2 2>/dev/null)
         case "$keypress" in
             '[A') key="UP" ;;
@@ -102,7 +102,7 @@ read_key() {
     echo "$key"
 }
 
-# Menü göster ve seçim yap
+# Show menu and make selection
 show_menu() {
     local selected=$1
     local options=("$@")
@@ -119,92 +119,19 @@ show_menu() {
     done
 }
 
-# Terminal sekmelerini listele
-list_and_activate_tabs() {
-    osascript <<'APPLESCRIPT'
-tell application "Terminal"
-    set tabList to ""
-    set windowCount to count of windows
-    
-    if windowCount = 0 then
-        return ""
-    end if
-    
-    repeat with w from 1 to windowCount
-        try
-            set currentWindow to window w
-            set tabCount to count of tabs of currentWindow
-            
-            repeat with t from 1 to tabCount
-                try
-                    set currentTab to tab t of currentWindow
-                    set tabTitle to custom title of currentTab
-                    if tabTitle = "" then
-                        set tabTitle to name of currentWindow
-                    end if
-                    if tabList = "" then
-                        set tabList to w & "," & t & "|" & tabTitle
-                    else
-                        set tabList to tabList & return & w & "," & t & "|" & tabTitle
-                    end if
-                end try
-            end repeat
-        end try
-    end repeat
-    
-    return tabList
-end tell
-APPLESCRIPT
-}
 
-# Sekmeyi öne getir
-activate_tab() {
-    local window_index=$1
-    local tab_index=$2
-    
-    osascript <<APPLESCRIPT
-tell application "Terminal"
-    activate
-    try
-        set w to window $window_index
-        set t to tab $tab_index of w
-        set selected of t to true
-        set frontmost of w to true
-    end try
-end tell
-APPLESCRIPT
-}
-
-# Ana menü
+# Main menu
 main_menu() {
     local selected=0
-    local menu_items=("SSH Bağlan" "Sunucu Ekle" "Sunucu Düzenle" "Sunucu Sil" "Sunucu Listesi" "Çıkış")
+    local menu_items=("Connect SSH" "Add Server" "Edit Server" "Delete Server" "List Servers" "Exit")
     
     while true; do
         show_banner
-        echo -e "${GREEN}Ana Menü:${RESET}"
+        echo -e "${GREEN}Main Menu:${RESET}"
         echo ""
         show_menu $selected "${menu_items[@]}"
         echo ""
-        
-        # Açık Terminal sekmelerini göster
-        local tabs_info=$(list_and_activate_tabs)
-        if [ -n "$tabs_info" ]; then
-            echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-            echo -e "${LIGHT_ORANGE}Açık Sekmeler:${RESET}"
-            local tab_num=1
-            while IFS= read -r line || [ -n "$line" ]; do
-                if [ -n "$line" ]; then
-                    IFS='|' read -r indices title <<< "$line"
-                    echo -e "  ${BLUE}[$tab_num]${RESET} ${WHITE}$title${RESET}"
-                    ((tab_num++))
-                fi
-            done <<< "$tabs_info"
-            echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-            echo ""
-        fi
-        
-        echo -e "${YELLOW}[↑↓] Seç | [Enter] Onayla | [1-9] Sekme Öne Getir | [q] Çıkış${RESET}"
+        echo -e "${YELLOW}[↑↓] Select | [Enter] Confirm | [q] Exit${RESET}"
         
         local key=$(read_key)
         
@@ -229,32 +156,6 @@ main_menu() {
                     5) exit 0 ;;
                 esac
                 ;;
-            "1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")
-                # Rakam tuşuna basıldığında ilgili sekmeyi öne getir
-                local tab_num=$((key))
-                local tab_count=0
-                local target_indices=""
-                
-                if [ -n "$tabs_info" ]; then
-                    while IFS= read -r line || [ -n "$line" ]; do
-                        if [ -n "$line" ]; then
-                            ((tab_count++))
-                            if [ $tab_count -eq $tab_num ]; then
-                                target_indices=$line
-                                break
-                            fi
-                        fi
-                    done <<< "$tabs_info"
-                    
-                    if [ -n "$target_indices" ]; then
-                        IFS='|' read -r indices title <<< "$target_indices"
-                        IFS=',' read -r window_idx tab_idx <<< "$indices"
-                        activate_tab "$window_idx" "$tab_idx"
-                        echo -e "${GREEN}✓ Sekme öne getirildi: $title${RESET}"
-                        sleep 0.5
-                    fi
-                fi
-                ;;
             "q"|"Q")
                 exit 0
                 ;;
@@ -262,7 +163,7 @@ main_menu() {
     done
 }
 
-# SSH bağlantı menüsü
+# SSH connection menu
 ssh_connect_menu() {
     local servers_array=()
     while IFS= read -r line || [ -n "$line" ]; do
@@ -273,8 +174,8 @@ ssh_connect_menu() {
     
     if [ ${#servers_array[@]} -eq 0 ]; then
         echo ""
-        echo -e "${RED}Kayıtlı sunucu bulunamadı!${RESET}"
-        echo -e "${YELLOW}Önce bir sunucu ekleyin.${RESET}"
+        echo -e "${RED}No saved servers found!${RESET}"
+        echo -e "${YELLOW}Please add a server first.${RESET}"
         sleep 2
         return
     fi
@@ -283,7 +184,7 @@ ssh_connect_menu() {
     
     while true; do
         show_banner
-        echo -e "${GREEN}SSH Bağlantısı Seç:${RESET}"
+        echo -e "${GREEN}Select SSH Connection:${RESET}"
         echo ""
         
         local i=0
@@ -298,7 +199,7 @@ ssh_connect_menu() {
         done
         
         echo ""
-        echo -e "${YELLOW}[↑↓] Seç | [Enter] Bağlan | [Esc] Geri${RESET}"
+        echo -e "${YELLOW}[↑↓] Select | [Enter] Connect | [Esc] Back${RESET}"
         
         local key=$(read_key)
         
@@ -326,7 +227,7 @@ ssh_connect_menu() {
 }
 
 
-# SSH bağlantısı kur (yeni terminal penceresinde)
+# Connect SSH (in new terminal window)
 connect_ssh() {
     local name=$1
     local host=$2
@@ -334,43 +235,43 @@ connect_ssh() {
     local port=$4
     
     show_banner
-    echo -e "${GREEN}SSH Bağlantısı:${RESET}"
-    echo -e "${BLUE}Sunucu:${RESET} $name"
+    echo -e "${GREEN}SSH Connection:${RESET}"
+    echo -e "${BLUE}Server:${RESET} $name"
     echo -e "${BLUE}Host:${RESET} $host"
-    echo -e "${BLUE}Kullanıcı:${RESET} $user"
+    echo -e "${BLUE}User:${RESET} $user"
     echo -e "${BLUE}Port:${RESET} $port"
     echo ""
-    echo -e "${YELLOW}Yeni pencerede açılıyor...${RESET}"
+    echo -e "${YELLOW}Opening in new window...${RESET}"
     echo ""
     
-    # macOS'ta yeni terminal penceresi aç ve SSH bağlantısı yap
-    # Bağlantı başlığına sunucu adını ekle
-    # osascript için güvenli yöntem kullan (heredoc)
+    # Open new terminal window on macOS and make SSH connection
+    # Add server name to connection title
+    # Use safe method for osascript (heredoc)
     
-    # Özel karakterleri escape et
+    # Escape special characters
     local safe_name=$(printf '%s' "$name" | sed "s/'/'\"'\"'/g")
     local safe_user=$(printf '%s' "$user" | sed "s/'/'\"'\"'/g")
     local safe_host=$(printf '%s' "$host" | sed "s/'/'\"'\"'/g")
     
     osascript <<EOF
 tell application "Terminal"
-    -- SSH komutunu hazırla
+    -- Prepare SSH command
     set titleCmd to "echo -ne \"\\\\033]0;SSH: $safe_name ($safe_user@$safe_host)\\\\007\""
     set sshCmd to "ssh -p $port $safe_user@$safe_host"
     set fullCmd to titleCmd & "; " & sshCmd
     
-    -- Yeni pencereyi aç
+    -- Open new window
     do script fullCmd
     activate
 end tell
 EOF
     
     sleep 1
-    echo -e "${GREEN}✓ SSH bağlantısı yeni pencerede açıldı!${RESET}"
+    echo -e "${GREEN}✓ SSH connection opened in new window!${RESET}"
     sleep 1
 }
 
-# brew kontrolü
+# Check brew
 check_brew() {
     if ! command -v brew &> /dev/null; then
         return 1
@@ -378,51 +279,51 @@ check_brew() {
     return 0
 }
 
-# Sunucu ekle
+# Add server
 add_server() {
-    # Terminal echo'yu aç (yazılanları görmek için)
+    # Enable terminal echo (to see what is typed)
     stty echo
     stty -cbreak
     
     show_banner
-    echo -e "${GREEN}Yeni Sunucu Ekle:${RESET}"
+    echo -e "${GREEN}Add New Server:${RESET}"
     echo ""
     
-    echo -ne "${BLUE}Sunucu Adı:${RESET} "
+    echo -ne "${BLUE}Server Name:${RESET} "
     read -r name
     
     echo -ne "${BLUE}Host/IP:${RESET} "
     read -r host
     
-    echo -ne "${BLUE}Kullanıcı (varsayılan root):${RESET} "
+    echo -ne "${BLUE}User (default root):${RESET} "
     read -r user
-    user=${user:-root}  # Varsayılan olarak root
+    user=${user:-root}  # Default to root
     
-    echo -ne "${BLUE}Port (varsayılan 22):${RESET} "
+    echo -ne "${BLUE}Port (default 22):${RESET} "
     read -r port
     port=${port:-22}
     
     echo ""
-    echo -ne "${YELLOW}Kaydedilsin mi? (e/h):${RESET} "
+    echo -ne "${YELLOW}Save? (y/n):${RESET} "
     read -r save_choice
     
     if [ "$save_choice" = "e" ] || [ "$save_choice" = "E" ] || [ "$save_choice" = "y" ] || [ "$save_choice" = "Y" ]; then
         save_server "$name" "$host" "$user" "$port"
         echo ""
-        echo -e "${GREEN}✓ Sunucu kaydedildi!${RESET}"
+        echo -e "${GREEN}✓ Server saved!${RESET}"
         sleep 1
     else
         echo ""
-        echo -e "${YELLOW}Sunucu kaydedilmedi.${RESET}"
+        echo -e "${YELLOW}Server not saved.${RESET}"
         sleep 1
     fi
     
-    # Terminal ayarlarını geri yükle (menü navigasyonu için)
+    # Restore terminal settings (for menu navigation)
     stty -echo
     stty cbreak
 }
 
-# Sunucu listesi göster
+# List servers
 list_servers() {
     local servers_array=()
     while IFS= read -r line || [ -n "$line" ]; do
@@ -432,37 +333,37 @@ list_servers() {
     done < <(load_servers)
     
     show_banner
-    echo -e "${GREEN}Kayıtlı Sunucular:${RESET}"
+    echo -e "${GREEN}Saved Servers:${RESET}"
     echo ""
     
     if [ ${#servers_array[@]} -eq 0 ]; then
-        echo -e "${RED}Kayıtlı sunucu bulunamadı!${RESET}"
+        echo -e "${RED}No saved servers found!${RESET}"
     else
         local i=1
         for server in "${servers_array[@]}"; do
             IFS='|' read -r name host user port <<< "$server"
             echo -e "${LIGHT_ORANGE}$i.${RESET} ${WHITE}$name${RESET}"
             echo -e "   ${BLUE}Host:${RESET} $host"
-            echo -e "   ${BLUE}Kullanıcı:${RESET} $user"
+            echo -e "   ${BLUE}User:${RESET} $user"
             echo -e "   ${BLUE}Port:${RESET} $port"
             echo ""
             ((i++))
         done
     fi
     
-    # Terminal echo'yu aç (tuş basımını görmek için)
+    # Enable terminal echo (to see key press)
     stty echo
     stty -cbreak
     
-    echo -e "${YELLOW}Devam etmek için bir tuşa basın...${RESET}"
+    echo -e "${YELLOW}Press any key to continue...${RESET}"
     read -n 1
     
-    # Terminal ayarlarını geri yükle (menü navigasyonu için)
+    # Restore terminal settings (for menu navigation)
     stty -echo
     stty cbreak
 }
 
-# Sunucu güncelle
+# Update server
 update_server() {
     local index=$1
     local new_name=$2
@@ -470,7 +371,7 @@ update_server() {
     local new_user=$4
     local new_port=$5
     
-    # Geçici dosya oluştur
+    # Create temporary file
     local temp_file=$(mktemp)
     local i=0
     
@@ -488,11 +389,11 @@ update_server() {
     mv "$temp_file" "$CONFIG_FILE"
 }
 
-# Sunucu sil
+# Delete server
 delete_server() {
     local index=$1
     
-    # Geçici dosya oluştur
+    # Create temporary file
     local temp_file=$(mktemp)
     local i=0
     
@@ -508,7 +409,7 @@ delete_server() {
     mv "$temp_file" "$CONFIG_FILE"
 }
 
-# Sunucu düzenleme menüsü
+# Edit server menu
 edit_server_menu() {
     local servers_array=()
     while IFS= read -r line || [ -n "$line" ]; do
@@ -519,8 +420,8 @@ edit_server_menu() {
     
     if [ ${#servers_array[@]} -eq 0 ]; then
         echo ""
-        echo -e "${RED}Kayıtlı sunucu bulunamadı!${RESET}"
-        echo -e "${YELLOW}Önce bir sunucu ekleyin.${RESET}"
+        echo -e "${RED}No saved servers found!${RESET}"
+        echo -e "${YELLOW}Please add a server first.${RESET}"
         sleep 2
         return
     fi
@@ -529,7 +430,7 @@ edit_server_menu() {
     
     while true; do
         show_banner
-        echo -e "${GREEN}Düzenlenecek Sunucuyu Seç:${RESET}"
+        echo -e "${GREEN}Select Server to Edit:${RESET}"
         echo ""
         
         local i=0
@@ -544,7 +445,7 @@ edit_server_menu() {
         done
         
         echo ""
-        echo -e "${YELLOW}[↑↓] Seç | [Enter] Düzenle | [Esc] Geri${RESET}"
+        echo -e "${YELLOW}[↑↓] Select | [Enter] Edit | [Esc] Back${RESET}"
         
         local key=$(read_key)
         
@@ -571,7 +472,7 @@ edit_server_menu() {
     done
 }
 
-# Sunucu düzenle
+# Edit server
 edit_server() {
     local index=$1
     local old_name=$2
@@ -579,23 +480,23 @@ edit_server() {
     local old_user=$4
     local old_port=$5
     
-    # Terminal echo'yu aç (yazılanları görmek için)
+    # Enable terminal echo (to see what is typed)
     stty echo
     stty -cbreak
     
     show_banner
-    echo -e "${GREEN}Sunucu Düzenle:${RESET}"
+    echo -e "${GREEN}Edit Server:${RESET}"
     echo ""
-    echo -e "${BLUE}Mevcut Bilgiler:${RESET}"
-    echo -e "  ${WHITE}Sunucu Adı:${RESET} $old_name"
+    echo -e "${BLUE}Current Information:${RESET}"
+    echo -e "  ${WHITE}Server Name:${RESET} $old_name"
     echo -e "  ${WHITE}Host/IP:${RESET} $old_host"
-    echo -e "  ${WHITE}Kullanıcı:${RESET} $old_user"
+    echo -e "  ${WHITE}User:${RESET} $old_user"
     echo -e "  ${WHITE}Port:${RESET} $old_port"
     echo ""
-    echo -e "${YELLOW}Yeni bilgileri girin (boş bırakırsanız mevcut değer korunur):${RESET}"
+    echo -e "${YELLOW}Enter new information (leave blank to keep current value):${RESET}"
     echo ""
     
-    echo -ne "${BLUE}Sunucu Adı [$old_name]:${RESET} "
+    echo -ne "${BLUE}Server Name [$old_name]:${RESET} "
     read -r name
     name=${name:-$old_name}
     
@@ -603,7 +504,7 @@ edit_server() {
     read -r host
     host=${host:-$old_host}
     
-    echo -ne "${BLUE}Kullanıcı [$old_user]:${RESET} "
+    echo -ne "${BLUE}User [$old_user]:${RESET} "
     read -r user
     user=${user:-$old_user}
     
@@ -614,15 +515,15 @@ edit_server() {
     update_server "$index" "$name" "$host" "$user" "$port"
     
     echo ""
-    echo -e "${GREEN}✓ Sunucu bilgileri güncellendi!${RESET}"
+    echo -e "${GREEN}✓ Server information updated!${RESET}"
     sleep 1
     
-    # Terminal ayarlarını geri yükle (menü navigasyonu için)
+    # Restore terminal settings (for menu navigation)
     stty -echo
     stty cbreak
 }
 
-# Sunucu silme menüsü
+# Delete server menu
 delete_server_menu() {
     local servers_array=()
     while IFS= read -r line || [ -n "$line" ]; do
@@ -633,8 +534,8 @@ delete_server_menu() {
     
     if [ ${#servers_array[@]} -eq 0 ]; then
         echo ""
-        echo -e "${RED}Kayıtlı sunucu bulunamadı!${RESET}"
-        echo -e "${YELLOW}Önce bir sunucu ekleyin.${RESET}"
+        echo -e "${RED}No saved servers found!${RESET}"
+        echo -e "${YELLOW}Please add a server first.${RESET}"
         sleep 2
         return
     fi
@@ -643,7 +544,7 @@ delete_server_menu() {
     
     while true; do
         show_banner
-        echo -e "${RED}Silinecek Sunucuyu Seç:${RESET}"
+        echo -e "${RED}Select Server to Delete:${RESET}"
         echo ""
         
         local i=0
@@ -658,7 +559,7 @@ delete_server_menu() {
         done
         
         echo ""
-        echo -e "${YELLOW}[↑↓] Seç | [Enter] Sil | [Esc] Geri${RESET}"
+        echo -e "${YELLOW}[↑↓] Select | [Enter] Delete | [Esc] Back${RESET}"
         
         local key=$(read_key)
         
@@ -685,57 +586,57 @@ delete_server_menu() {
     done
 }
 
-# Sunucu silme onayı
+# Confirm server deletion
 confirm_delete_server() {
     local index=$1
     local name=$2
     
-    # Terminal echo'yu aç (yazılanları görmek için)
+    # Enable terminal echo (to see what is typed)
     stty echo
     stty -cbreak
     
     show_banner
-    echo -e "${RED}Sunucu Silme Onayı:${RESET}"
+    echo -e "${RED}Confirm Server Deletion:${RESET}"
     echo ""
-    echo -e "${YELLOW}Sunucu:${RESET} ${WHITE}$name${RESET}"
+    echo -e "${YELLOW}Server:${RESET} ${WHITE}$name${RESET}"
     echo ""
-    echo -ne "${RED}Bu sunucuyu silmek istediğinizden emin misiniz? (e/h):${RESET} "
+    echo -ne "${RED}Are you sure you want to delete this server? (y/n):${RESET} "
     read -r confirm
     
     if [ "$confirm" = "e" ] || [ "$confirm" = "E" ] || [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
         delete_server "$index"
         echo ""
-        echo -e "${GREEN}✓ Sunucu silindi!${RESET}"
+        echo -e "${GREEN}✓ Server deleted!${RESET}"
         sleep 1
     else
         echo ""
-        echo -e "${YELLOW}Silme işlemi iptal edildi.${RESET}"
+        echo -e "${YELLOW}Deletion cancelled.${RESET}"
         sleep 1
     fi
     
-    # Terminal ayarlarını geri yükle (menü navigasyonu için)
+    # Restore terminal settings (for menu navigation)
     stty -echo
     stty cbreak
 }
 
 
 
-# Ana program
+# Main program
 main() {
-    # Hata durumunda terminal ayarlarını geri yükle
+    # Restore terminal settings on error
     trap 'stty echo; stty -cbreak; exit' INT TERM EXIT
     
-    # Terminal ayarları
+    # Terminal settings
     stty -echo
     stty cbreak
     
     init_config
     main_menu
     
-    # Terminal ayarlarını geri yükle
+    # Restore terminal settings
     stty echo
     stty -cbreak
 }
 
-# Programı başlat
+# Start program
 main

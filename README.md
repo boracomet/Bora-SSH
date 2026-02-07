@@ -1,16 +1,5 @@
 # 🚀 Bora-SSH
 
-<div align="center">
-
-```
-__________                                _________ _________ ___ ___  
-\______   \ ________________             /   _____//   _____//   |   \ 
- |    |  _//  _ \_  __ \__  \    ______  \_____  \ \_____  \/    ~    \
- |    |   (  <_> )  | \// __ \_ /_____/  /        \/        \    Y    /
- |______  /\____/|__|  (____  /         /_______  /_______  /\___|_  / 
-        \/                  \/                  \/        \/       \/  
-```
-
 **OpenSource CLI SSH Client for Macbook** 🍎
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -18,232 +7,204 @@ __________                                _________ _________ ___ ___
 
 *Modern, colorful, and intuitive SSH connection manager for macOS*
 
-</div>
+---
+
+## 📸 Main Menu View
+
+![Main Menu](assets/main-menu.png)
 
 ---
 
-## 📸 Ana Menü Görünümü
-
-![Ana Menü](assets/main-menu.png)
-
-```
-╔══════════════════════════════════════════════════════════════╗
-║                                                              ║
-║  ┌────────────────────────────────────────────────────┐    ║
-║  │  BORA-SSH Connection Manager                        │    ║
-║  ├────────────────────────────────────────────────────┤    ║
-║  │                                                      │    ║
-║  │  ▶ SSH Bağlan                                       │    ║
-║  │    Sunucu Ekle                                      │    ║
-║  │    Sunucu Düzenle                                   │    ║
-║  │    Sunucu Sil                                       │    ║
-║  │    Sunucu Listesi                                   │    ║
-║  │    Çıkış                                            │    ║
-║  └────────────────────────────────────────────────────┘    ║
-║                                                              ║
-║  [↑↓] Seç | [Enter] Onayla | [q] Çıkış
-╚══════════════════════════════════════════════════════════════╝
-```
-
----
-
-## ✨ Özellikler
+## ✨ Features
 
 ### 🎨 **Modern TUI Design**
-- Soft turuncu tonlarında renkli ASCII art başlık
-- Terminal tabanlı kullanıcı arayüzü (TUI)
-- Akıcı menü navigasyonu
+- Colorful ASCII art header with soft orange tones
+- Terminal-based user interface (TUI)
+- Smooth menu navigation
 
-### ⌨️ **Kolay Navigasyon**
-- **Yön tuşları** (↑↓) ile menü gezintisi
-- **Enter** ile seçim onaylama
-- **q** veya **Esc** ile çıkış
+### ⌨️ **Easy Navigation**
+- **Arrow keys** (↑↓) for menu navigation
+- **Enter** to confirm selection
+- **q** or **Esc** to exit
 
-### 💾 **Sunucu Yönetimi**
-- ✅ Sunucu ekleme, düzenleme ve silme
-- ✅ Kayıtlı sunucuları listeleme
-- ✅ Hızlı SSH bağlantısı
-- ✅ Otomatik sunucu kaydetme
+### 💾 **Server Management**
+- ✅ Add, edit, and delete servers
+- ✅ List saved servers
+- ✅ Quick SSH connection
+- ✅ Automatic server saving
 
-### 🪟 **Terminal Yönetimi**
-- ✅ Yeni SSH bağlantıları otomatik olarak yeni Terminal penceresinde açılır
-- ✅ Ana script penceresi açık kalır
-- ✅ Sekme başlıklarında sunucu bilgileri
+### 🪟 **Terminal Management**
+- ✅ New SSH connections automatically open in new Terminal window
+- ✅ Main script window stays open
+- ✅ Server information in tab titles
 
-### 🔐 **Güvenlik**
-- ✅ Standart SSH protokolü
-- ✅ Şifre ve SSH anahtarı desteği
-- ✅ Güvenli sunucu bilgisi saklama (`~/.bora-ssh/servers.conf`)
+### 🔐 **Security**
+- ✅ Standard SSH protocol
+- ✅ Password and SSH key support
+- ✅ Secure server information storage (`~/.bora-ssh/servers.conf`)
 
 ---
 
-## 📦 Kurulum
+## 📦 Installation
 
-### Hızlı Başlangıç
+### Quick Start
 
 ```bash
-# Repository'yi klonlayın
+# Clone the repository
 git clone https://github.com/boracomet/Bora-SSH.git
 cd Bora-SSH
 
-# Scripti çalıştırılabilir yapın
+# Make the script executable
 chmod +x bora-ssh.sh
 
-# Scripti çalıştırın
+# Run the script
 ./bora-ssh.sh
 ```
 
 ---
 
-## 🚀 Kullanım
+## 🚀 Usage
 
-### Ana Menü
+### Main Menu
 
-Script çalıştırıldığında renkli ASCII art başlık ve ana menü görüntülenir:
+When the script is run, a colorful ASCII art header and main menu are displayed:
 
-- **SSH Bağlan** - Kayıtlı sunuculara SSH bağlantısı yap
-- **Sunucu Ekle** - Yeni bir sunucu ekle ve kaydet
-- **Sunucu Düzenle** - Mevcut sunucu bilgilerini düzenle
-- **Sunucu Sil** - Kayıtlı sunucuyu sil
-- **Sunucu Listesi** - Tüm kayıtlı sunucuları görüntüle
-- **Çıkış** - Programdan çık
+- **Connect SSH** - Connect to saved servers via SSH
+- **Add Server** - Add and save a new server
+- **Edit Server** - Edit existing server information
+- **Delete Server** - Delete a saved server
+- **List Servers** - View all saved servers
+- **Exit** - Exit the program
 
-### Navigasyon Kısayolları
+### Navigation Shortcuts
 
-| Tuş | İşlev |
-|-----|-------|
-| `↑` `↓` | Menü öğeleri arasında gezin |
-| `Enter` | Seçili öğeyi onayla |
-| `q` | Çıkış yap |
+| Key | Function |
+|-----|----------|
+| `↑` `↓` | Navigate between menu items |
+| `Enter` | Confirm selected item |
+| `q` | Exit |
 
-### Sunucu Ekleme
+### Adding a Server
 
-1. Ana menüden **"Sunucu Ekle"** seçeneğini seçin
-2. Sunucu bilgilerini girin:
+1. Select **"Add Server"** from the main menu
+2. Enter server information:
    ```
-   Sunucu Adı: Production Server
+   Server Name: Production Server
    Host/IP: 192.168.1.100
-   Kullanıcı: root
+   User: root
    Port: 22
    ```
-3. Kaydetmek istiyorsanız **"e"** (evet) yazın
+3. Type **"y"** (yes) if you want to save
 
-Sunucu bilgileri `~/.bora-ssh/servers.conf` dosyasına kaydedilir.
+Server information is saved to the `~/.bora-ssh/servers.conf` file.
 
-### SSH Bağlantısı
+### SSH Connection
 
-1. Ana menüden **"SSH Bağlan"** seçeneğini seçin
-2. Kayıtlı sunucular listesinden bir sunucu seçin
-3. SSH bağlantısı yeni bir Terminal penceresinde açılır
-4. Ana script penceresi açık kalır, yeni bağlantılar ekleyebilirsiniz
+1. Select **"Connect SSH"** from the main menu
+2. Select a server from the saved servers list
+3. SSH connection opens in a new Terminal window
+4. Main script window stays open, you can add new connections
 
 ---
 
-## ⚙️ Konfigürasyon
+## ⚙️ Configuration
 
-### Sunucu Dosyası
+### Server File
 
-Sunucu bilgileri şu dosyada saklanır:
+Server information is stored in:
 ```
 ~/.bora-ssh/servers.conf
 ```
 
-Her satır şu formatta:
+Each line is in the following format:
 ```
-SunucuAdı|Host|Kullanıcı|Port
+ServerName|Host|User|Port
 ```
 
-**Örnek:**
+**Example:**
 ```
 Production|192.168.1.100|root|22
 Development|dev.example.com|admin|2222
 Staging|staging.example.com|deploy|22
 ```
 
-**⚠️ Güvenlik Notu:** `servers.conf` dosyası hassas bilgiler içerdiği için `.gitignore` dosyasına eklenmiştir ve Git'e yüklenmez.
+**⚠️ Security Note:** The `servers.conf` file contains sensitive information and has been added to `.gitignore`, so it will not be uploaded to Git.
 
 ---
 
-## 📋 Gereksinimler
+## 📋 Requirements
 
-- **macOS** (test edilmiş)
+- **macOS** (tested)
 - **Bash** 4.0+
-- **SSH** komutları (macOS'ta varsayılan olarak mevcuttur)
-- **Terminal.app** (macOS varsayılan terminal uygulaması)
+- **SSH** commands (available by default on macOS)
+- **Terminal.app** (macOS default terminal application)
 
 ---
 
-## 🎯 Örnek Kullanım Senaryoları
+## 🎯 Example Usage Scenarios
 
-### Senaryo 1: İlk Kullanım
+### Scenario 1: First Use
 
 ```bash
 $ ./bora-ssh.sh
 
-# Ana menü görüntülenir
-# "Sunucu Ekle" seçilir
-# Sunucu bilgileri girilir ve kaydedilir
-# "SSH Bağlan" ile bağlantı kurulur
+# Main menu is displayed
+# "Add Server" is selected
+# Server information is entered and saved
+# Connection is established with "Connect SSH"
 ```
 
-### Senaryo 2: Çoklu Sunucu Yönetimi
+### Scenario 2: Multiple Server Management
 
 ```bash
-# Birden fazla sunucuya bağlanma
+# Connecting to multiple servers
 $ ./bora-ssh.sh
 
-# 1. Production Server'a bağlan
-# 2. Yeni Terminal penceresi açılır
-# 3. Ana menüye dön
-# 4. Development Server'a bağlan
-# 5. Yeni Terminal penceresi açılır
+# 1. Connect to Production Server
+# 2. New Terminal window opens
+# 3. Return to main menu
+# 4. Connect to Development Server
+# 5. New Terminal window opens
 ```
 
 ---
 
-## 🛠️ Geliştirme
+## 🛠️ Development
 
-### Proje Yapısı
+### Project Structure
 
 ```
 Bora-SSH/
-├── bora-ssh.sh          # Ana script
-├── README.md            # Bu dosya
-├── .gitignore           # Git ignore dosyası
-└── LICENSE              # MIT Lisansı
+├── bora-ssh.sh          # Main script
+├── README.md            # This file
+├── .gitignore           # Git ignore file
+└── LICENSE              # MIT License
 ```
 
-### Katkıda Bulunma
+### Contributing
 
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add amazing feature'`)
-4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
-
----
-
-## 📝 Notlar
-
-- Script terminal tabanlı bir TUI (Text User Interface) kullanır
-- Renkler terminal desteğine bağlıdır (256 renk önerilir)
-- SSH bağlantıları için gerekli SSH anahtarları veya şifreler kullanılır
-- Yeni SSH bağlantıları otomatik olarak yeni Terminal penceresinde açılır
-- Ana script penceresi açık kalır, birden fazla bağlantı yönetebilirsiniz
-- Sunucu bilgileri `~/.bora-ssh/servers.conf` dosyasında saklanır ve Git'e yüklenmez
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
-## 🐛 Bilinen Sorunlar
+## 📝 Notes
 
-- Terminal penceresi yönetimi macOS Terminal.app'e özeldir
-- Çoklu ekran desteği test edilmemiştir
+- The script uses a terminal-based TUI (Text User Interface)
+- Colors depend on terminal support (256 colors recommended)
+- SSH keys or passwords are used for SSH connections
+- New SSH connections automatically open in a new Terminal window
+- Main script window stays open, allowing you to manage multiple connections
+- Server information is stored in `~/.bora-ssh/servers.conf` and is not uploaded to Git
 
 ---
 
-## 📄 Lisans
+## 📄 License
 
-Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
+This project is licensed under the [MIT License](LICENSE).
 
 ```
 MIT License
@@ -270,7 +231,7 @@ OUT OF OR IN CONNECTION WITH THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-## 👤 Yazar
+## 👤 Author
 
 **Bora**
 
@@ -279,16 +240,16 @@ OUT OF OR IN CONNECTION WITH THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-## 🙏 Teşekkürler
+## 🙏 Acknowledgments
 
-- Tüm katkıda bulunanlara teşekkürler!
-- Open source topluluğuna teşekkürler!
+- Thanks to all contributors!
+- Thanks to the open source community!
 
 ---
 
 <div align="center">
 
-**⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın! ⭐**
+**⭐ If you liked this project, don't forget to give it a star! ⭐**
 
 Made with ❤️ for macOS users
 
